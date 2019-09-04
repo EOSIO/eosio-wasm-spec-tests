@@ -2,10 +2,9 @@
 # Defines the eosio-wasm-spec-tests generator and generated tests
 # ##################################################################################################
 cmake_minimum_required(VERSION 3.8)
-set(VERSION_MAJOR 1)
+set(VERSION_MAJOR 0)
 set(VERSION_MINOR 0)
-set(VERSION_PATCH 0)
-set(VERSION_SUFFIX rc1)
+set(VERSION_PATCH 1)
 project(eos-wasm-spec-tests VERSION ${VERSION_MAJOR}.${VERSION_MINOR}.${VERSION_PATCH})
 
 if (VERSION_SUFFIX)
