@@ -28,5 +28,5 @@ inline void push_action(TESTER& tester, action&& act, uint64_t authorizer) {
    tester.produce_block();
 }
 
-const string base_dir = "${CMAKE_BINARY_DIR}";
+const string base_dir = "${CMAKE_SOURCE_DIR}";
 

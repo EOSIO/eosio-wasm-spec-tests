@@ -1,6 +1,5 @@
 # ##################################################################################################
-# Defines the eos-vm library and associated tooling. See docs/cmake.md for instructions on how to
-# build eos-vm or integrate with another system with CMake.
+# Defines the eosio-wasm-spec-tests generator and generated tests
 # ##################################################################################################
 cmake_minimum_required(VERSION 3.8)
 set(VERSION_MAJOR 1)
