@@ -8,12 +8,6 @@ if( GPERFTOOLS_FOUND )
    list( APPEND PLATFORM_SPECIFIC_LIBS tcmalloc )
 endif()
 
-find_package(LLVM 4.0 REQUIRED CONFIG)
-
-link_directories(${LLVM_LIBRARY_DIR})
-
-add_subdirectory(wasms)
-
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/wasm_spec_tests.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/include/wasm_spec_tests.hpp ESCAPE_QUOTES)
 
 ### BUILD UNIT TEST EXECUTABLE ###
