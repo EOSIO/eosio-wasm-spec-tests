@@ -27,14 +27,14 @@ foreach(TEST_SUITE ${WASM_TESTS}) # create an independent target for each test s
   if (NOT "" STREQUAL "${SUITE_NAME}") # ignore empty lines
     string(REPLACE "\n" ";" SN_LIST ${SUITE_NAME})
     foreach(SN ${SN_LIST})
-      add_test(NAME ${SN}_unit_test_wavm COMMAND wasm_spec_test --run_test=${SN} --report_level=detailed --color_output --catch_system_errors=no -- --wavm)
-      add_test(NAME ${SN}_unit_test_wabt COMMAND wasm_spec_test --run_test=${SN} --report_level=detailed --color_output -- --wabt)
-        # build list of tests to run during coverage testing
-      if(NOT "" STREQUAL "${ctest_tests}")
-        set(ctest_tests "${ctest_tests}|${SN}_unit_test_wavm|${SN}_unit_test_wabt")
-      else()
-        set(ctest_tests "${SN}_unit_test_wavm|${SN}_unit_test_wabt")
-      endif()
+      foreach(RUNTIME ${EOSIO_WASM_RUNTIMES})
+          add_test(NAME ${SN}_unit_test_${RUNTIME} COMMAND wasm_spec_test --run_test=${SN} --report_level=detailed --color_output --catch_system_errors=no -- --${RUNTIME})
+          # build list of tests to run during coverage testing
+          if(ctest_tests)
+              string(APPEND ctest_tests "|")
+          endif()
+          string(APPEND ctest_tests "${SN}_unit_test_${RUNTIME}")
+      endforeach()
     endforeach(SN)
   endif()
 endforeach(TEST_SUITE)
