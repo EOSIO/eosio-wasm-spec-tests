@@ -1,4 +1,9 @@
-## How tests are generated
+# EOSIO WASM Spec Tests
+
+This repo provides a set of EOSIO unit tests that can be used to check a WASM Backend's conformance to the
+WebAssembly spec.
+
+### How tests are generated
 1. The JSON file for a spec test suite is read.
 2. For each spec test wasm defined in the JSON:
     - All the spec tests are created in a C++ file to match the function declaration as interpreted from the JSON.
@@ -15,7 +20,7 @@
 6. The newly created merged wasms and unit test C++ files are copied into the appropriate directory in the eos repo.
 
 
-## How tests are split up
+### How tests are split up
 - Within a spec test suite, each `assert_trap` and `assert_exhaustion` test case is given a unique `sub_apply` function.
     - All tests in a suite are in the same WASM file, so the test that is run is based on the `test.name` passed in to `apply` (which calls the correct `sub_apply`).
 - Within a test suite, `assert_return` tests are grouped into sets of 100.
@@ -28,11 +33,11 @@
 - The unit test files are grouped by test suite (all `address` tests are together, all `call` tests together, etc.)
 
 
-## How to generate tests
+### How to generate tests
 - Run the `setup_eosio_tests.py` script with no options to see the help text.
 
 
-## Known Issues
+### Known Issues
 - memory_grow.3 -- Will fail if not deleted from generated tests.
     - Unclear how to hand alter this to have memory properly zeroed where expected.
 
