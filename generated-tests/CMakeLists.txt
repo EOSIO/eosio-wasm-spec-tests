@@ -8,12 +8,6 @@ if( GPERFTOOLS_FOUND )
    list( APPEND PLATFORM_SPECIFIC_LIBS tcmalloc )
 endif()
 
-find_package(LLVM 4.0 REQUIRED CONFIG)
-
-link_directories(${LLVM_LIBRARY_DIR})
-
-add_subdirectory(wasms)
-
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/wasm_spec_tests.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/include/wasm_spec_tests.hpp ESCAPE_QUOTES)
 
 ### BUILD UNIT TEST EXECUTABLE ###
@@ -29,18 +23,19 @@ target_include_directories( wasm_spec_test PUBLIC
 
 ### MARK TEST SUITES FOR EXECUTION ###
 foreach(TEST_SUITE ${WASM_TESTS}) # create an independent target for each test suite
-  execute_process(COMMAND bash -c "grep -E 'BOOST_AUTO_TEST_SUITE\\s*[(]' ${TEST_SUITE} | grep -vE '//.*BOOST_AUTO_TEST_SUITE\\s*[(]' | cut -d ')' -f 1 | cut -d '(' -f 2" OUTPUT_VARIABLE SUITE_NAME OUTPUT_STRIP_TRAILING_WHITESPACE) # get the test suite name from the *.cpp file
+  execute_process(COMMAND bash -c "grep -Eo 'BOOST_DATA_TEST_CASE\\(\\w*' ${TEST_SUITE} | cut -c 22-" OUTPUT_VARIABLE SUITE_NAME OUTPUT_STRIP_TRAILING_WHITESPACE) # get the test suite name from the *.cpp file
   if (NOT "" STREQUAL "${SUITE_NAME}") # ignore empty lines
-    execute_process(COMMAND bash -c "echo ${SUITE_NAME} | sed -e 's/s$//' | sed -e 's/_test$//'" OUTPUT_VARIABLE TRIMMED_SUITE_NAME OUTPUT_STRIP_TRAILING_WHITESPACE) # trim "_test" or "_tests" from the end of ${SUITE_NAME}
-    # to run unit_test with all log from blockchain displayed, put "--verbose" after "--", i.e. "unit_test -- --verbose"
-    add_test(NAME ${TRIMMED_SUITE_NAME}_unit_test_wavm COMMAND wasm_spec_test --run_test=${SUITE_NAME} --report_level=detailed --color_output --catch_system_errors=no -- --wavm)
-    add_test(NAME ${TRIMMED_SUITE_NAME}_unit_test_wabt COMMAND wasm_spec_test --run_test=${SUITE_NAME} --report_level=detailed --color_output -- --wabt)
-    # build list of tests to run during coverage testing
-    if(NOT "" STREQUAL "${ctest_tests}")
-      set(ctest_tests "${ctest_tests}|${TRIMMED_SUITE_NAME}_unit_test_wavm|${TRIMMED_SUITE_NAME}_unit_test_wabt")
-    else()
-      set(ctest_tests "${TRIMMED_SUITE_NAME}_unit_test_wavm|${TRIMMED_SUITE_NAME}_unit_test_wabt")
-    endif()
+    string(REPLACE "\n" ";" SN_LIST ${SUITE_NAME})
+    foreach(SN ${SN_LIST})
+      add_test(NAME ${SN}_unit_test_wavm COMMAND wasm_spec_test --run_test=${SN} --report_level=detailed --color_output --catch_system_errors=no -- --wavm)
+      add_test(NAME ${SN}_unit_test_wabt COMMAND wasm_spec_test --run_test=${SN} --report_level=detailed --color_output -- --wabt)
+        # build list of tests to run during coverage testing
+      if(NOT "" STREQUAL "${ctest_tests}")
+        set(ctest_tests "${ctest_tests}|${SN}_unit_test_wavm|${SN}_unit_test_wabt")
+      else()
+        set(ctest_tests "${SN}_unit_test_wavm|${SN}_unit_test_wabt")
+      endif()
+    endforeach(SN)
   endif()
 endforeach(TEST_SUITE)
 set(ctest_tests "'${ctest_tests}' -j8") # surround test list string in apostrophies

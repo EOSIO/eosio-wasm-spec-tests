@@ -22,6 +22,3 @@ set(CMAKE_CXX_EXTENSIONS ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 add_subdirectory(generator)
-if(WASM_SPEC_TESTS)
-add_subdirectory(generated-tests)
-endif()
