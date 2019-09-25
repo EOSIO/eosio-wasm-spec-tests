@@ -41,6 +41,7 @@ endforeach(TEST_SUITE)
 set(ctest_tests "'${ctest_tests}' -j8") # surround test list string in apostrophies
 
 foreach(RUNTIME ${EOSIO_WASM_RUNTIMES})
+    set_tests_properties(memory_trap_1_check_throw_unit_test_${RUNTIME} PROPERTIES COST 10000)
     set_tests_properties(f64_cmp_0_pass_unit_test_${RUNTIME} PROPERTIES COST 9000)
     set_tests_properties(f32_cmp_0_pass_unit_test_${RUNTIME} PROPERTIES COST 8000)
     set_tests_properties(f64_0_pass_unit_test_${RUNTIME} PROPERTIES COST 7000)
