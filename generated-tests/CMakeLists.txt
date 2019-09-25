@@ -39,3 +39,12 @@ foreach(TEST_SUITE ${WASM_TESTS}) # create an independent target for each test s
   endif()
 endforeach(TEST_SUITE)
 set(ctest_tests "'${ctest_tests}' -j8") # surround test list string in apostrophies
+
+foreach(RUNTIME ${EOSIO_WASM_RUNTIMES})
+    set_tests_properties(f64_cmp_0_pass_unit_test_${RUNTIME} PROPERTIES COST 9000)
+    set_tests_properties(f32_cmp_0_pass_unit_test_${RUNTIME} PROPERTIES COST 8000)
+    set_tests_properties(f64_0_pass_unit_test_${RUNTIME} PROPERTIES COST 7000)
+    set_tests_properties(f32_0_pass_unit_test_${RUNTIME} PROPERTIES COST 6000)
+    set_tests_properties(conversions_0_check_throw_unit_test_${RUNTIME} PROPERTIES COST 5000)
+    set_tests_properties(unreachable_0_check_throw_unit_test_${RUNTIME} PROPERTIES COST 4000)
+endforeach()
