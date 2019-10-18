@@ -29,6 +29,7 @@ foreach(TEST_SUITE ${WASM_TESTS}) # create an independent target for each test s
     foreach(SN ${SN_LIST})
       foreach(RUNTIME ${EOSIO_WASM_RUNTIMES})
           add_test(NAME ${SN}_unit_test_${RUNTIME} COMMAND wasm_spec_test --run_test=${SN} --report_level=detailed --color_output --catch_system_errors=no -- --${RUNTIME})
+          set_property(TEST ${SN}_unit_test_${RUNTIME} PROPERTY LABELS long_running_tests)
           # build list of tests to run during coverage testing
           if(ctest_tests)
               string(APPEND ctest_tests "|")
