@@ -1,12 +1,5 @@
-find_package( Gperftools QUIET )
-
 ### Build contracts with cdt if available ###
 include(ExternalProject)
-
-if( GPERFTOOLS_FOUND )
-   message( STATUS "Found gperftools; compiling tests with TCMalloc" )
-   list( APPEND PLATFORM_SPECIFIC_LIBS tcmalloc )
-endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/wasm_spec_tests.hpp.in ${CMAKE_CURRENT_BINARY_DIR}/include/wasm_spec_tests.hpp ESCAPE_QUOTES)
 
