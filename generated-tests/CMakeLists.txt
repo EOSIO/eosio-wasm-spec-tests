@@ -16,7 +16,7 @@ target_include_directories( wasm_spec_test PUBLIC
 
 ### MARK TEST SUITES FOR EXECUTION ###
 foreach(TEST_SUITE ${WASM_TESTS}) # create an independent target for each test suite
-  execute_process(COMMAND bash -c "grep -Eo 'BOOST_DATA_TEST_CASE\\(\\w*' ${TEST_SUITE} | cut -c 22-" OUTPUT_VARIABLE SUITE_NAME OUTPUT_STRIP_TRAILING_WHITESPACE) # get the test suite name from the *.cpp file
+  execute_process(COMMAND bash -c "grep -Eo 'BOOST_DATA_TEST_CASE\\(\\w*' '${TEST_SUITE}' | cut -c 22-" OUTPUT_VARIABLE SUITE_NAME OUTPUT_STRIP_TRAILING_WHITESPACE) # get the test suite name from the *.cpp file
   if (NOT "" STREQUAL "${SUITE_NAME}") # ignore empty lines
     string(REPLACE "\n" ";" SN_LIST ${SUITE_NAME})
     foreach(SN ${SN_LIST})
